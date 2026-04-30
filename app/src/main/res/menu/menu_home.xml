@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_open_system"
+        android:title="@string/system_entry_title"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_open_project"
+        android:title="@string/project_entry_title"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_open_auth"
+        android:title="@string/auth_entry_title"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_open_extra"
+        android:title="@string/extra_entry_title"
+        app:showAsAction="never" />
+
+</menu>

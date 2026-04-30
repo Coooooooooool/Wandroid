@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".WandroidApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Wandroid">
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.system.SystemNavigationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.system.SystemRootListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.system.SystemDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.project.ProjectSearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".ui.site.CommonWebsitesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.CollectProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.coin.PointsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.message.MessagesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.todo.TodoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.web.WebContainerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.history.ReadingHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.extra.ExtraContentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.wenda.WendaDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moyu.MoyuVideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moyu.news.NewsListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moyu.news.NewsDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moyu.internet.InternetNewsActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

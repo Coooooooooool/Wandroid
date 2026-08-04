@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:ellipsize="end"
-    android:minLines="2"
-    android:maxLines="2"
+    android:minLines="1"
+    android:maxLines="1"
     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
     android:textColor="@color/text_primary" />

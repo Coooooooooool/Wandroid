@@ -44,7 +44,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         bindViews()
-        EdgeToEdgeHelper.apply(this, toolbar, formScrollView)
+        EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, formScrollView)
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener { finish() }
 

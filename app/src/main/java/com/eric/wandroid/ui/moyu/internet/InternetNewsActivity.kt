@@ -51,8 +51,9 @@ class InternetNewsActivity : AppCompatActivity() {
         bindViews()
         EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, recyclerView)
         setSupportActionBar(toolbar)
+        setTitle(R.string.internet_news_screen_title)
         toolbar.setNavigationOnClickListener { finish() }
-        toolbar.title = "互联网资讯"
+        toolbar.setTitle(R.string.internet_news_screen_title)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -105,7 +106,7 @@ class InternetNewsActivity : AppCompatActivity() {
                 emptyAction.setText(R.string.label_retry)
             } else {
                 emptyTitle.setText(R.string.empty_title)
-                emptyMessage.text = "暂时没有可展示的互联网资讯。"
+                emptyMessage.setText(R.string.internet_news_empty_message)
                 emptyAction.setText(R.string.label_refresh)
             }
         }

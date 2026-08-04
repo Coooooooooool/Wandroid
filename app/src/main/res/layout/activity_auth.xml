@@ -9,17 +9,17 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/brand_primary"
+        android:background="@color/surface_background"
         android:elevation="0dp"
         android:paddingHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back_24"
-        app:navigationIconTint="@color/white"
-        app:subtitleTextColor="@color/white"
+        app:navigationIconTint="@color/text_primary"
+        app:subtitleTextColor="@color/text_primary"
         app:title="@string/auth_screen_title"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/text_primary" />
 
     <ScrollView
         android:id="@+id/authScrollView"

@@ -177,7 +177,7 @@ class WendaDetailAdapter(
         }
 
         fun bind(comment: WendaComment) {
-            val displayName = displayUserName(comment)
+            val displayName = displayUserName(comment, itemView)
             avatarView.text = displayName.firstOrNull()?.uppercaseChar()?.toString()
                 ?: itemView.context.getString(R.string.wenda_comment_avatar_fallback)
             titleView.text = displayName
@@ -251,11 +251,13 @@ class WendaDetailAdapter(
             return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
 
-        private fun displayUserName(comment: WendaComment): String {
+        private fun displayUserName(comment: WendaComment, itemView: View): String {
             return if (comment.isAnonymous) {
-                "匿名用户"
+                itemView.context.getString(R.string.wenda_comment_anonymous_user)
             } else {
-                comment.userName.ifBlank { "匿名用户" }
+                comment.userName.ifBlank {
+                    itemView.context.getString(R.string.wenda_comment_anonymous_user)
+                }
             }
         }
 
@@ -272,7 +274,7 @@ class WendaDetailAdapter(
         }
 
         private fun buildReplyMeta(reply: WendaComment, itemView: View): String {
-            val fromUser = displayUserName(reply)
+            val fromUser = displayUserName(reply, itemView)
             val targetUser = reply.toUserName.ifBlank { itemView.context.getString(R.string.wenda_comment_default_target) }
             return itemView.context.getString(
                 R.string.wenda_comment_reply_meta,

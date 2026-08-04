@@ -22,12 +22,16 @@ object RemoteImageLoader {
     private val imageScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val httpClient = OkHttpClient()
 
-    fun loadInto(imageView: ImageView, url: String) {
+    fun loadInto(
+        imageView: ImageView,
+        url: String,
+        scaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_CROP
+    ) {
         imageView.tag = url
         imageView.setImageDrawable(
             ContextCompat.getDrawable(imageView.context, R.drawable.bg_banner_placeholder)
         )
-        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        imageView.scaleType = scaleType
         if (url.isBlank()) return
 
         memoryCache.get(url)?.let { cachedBitmap ->
@@ -47,7 +51,7 @@ object RemoteImageLoader {
             }
             memoryCache.put(url, bitmap)
             imageView.setImageBitmap(bitmap)
-            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+            imageView.scaleType = scaleType
         }
     }
 

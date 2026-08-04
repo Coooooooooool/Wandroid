@@ -24,6 +24,7 @@ class MoyuVideoActivity : AppCompatActivity() {
     private val viewModel: MoyuVideoViewModel by viewModels { MoyuVideoViewModelFactory() }
 
     private lateinit var backButton: ImageButton
+    private lateinit var videoControls: View
     private lateinit var viewPager: ViewPager2
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyState: View
@@ -37,11 +38,12 @@ class MoyuVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_moyu_video)
         bindViews()
-        EdgeToEdgeHelper.applyContentOnly(this, backButton, viewPager, emptyState)
+        EdgeToEdgeHelper.applyContentOnly(this, videoControls, viewPager, emptyState)
         WindowInsetsControllerCompat(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
             isAppearanceLightNavigationBars = false
         }
+        setTitle(R.string.moyu_video_title)
         backButton.setOnClickListener { finish() }
 
         viewPager.adapter = adapter
@@ -57,6 +59,7 @@ class MoyuVideoActivity : AppCompatActivity() {
 
     private fun bindViews() {
         backButton = findViewById(R.id.backButton)
+        videoControls = findViewById(R.id.videoControls)
         viewPager = findViewById(R.id.moyuVideoPager)
         progressBar = findViewById(R.id.fullScreenProgress)
         emptyState = findViewById(R.id.emptyState)

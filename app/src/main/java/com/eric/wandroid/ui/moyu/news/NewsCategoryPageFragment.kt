@@ -114,7 +114,7 @@ class NewsCategoryPageFragment : Fragment() {
                 emptyAction.setText(R.string.label_retry)
             } else {
                 emptyTitle.setText(R.string.empty_title)
-                emptyMessage.text = "暂时没有可展示的新闻内容。"
+                emptyMessage.setText(R.string.news_empty_message)
                 emptyAction.setText(R.string.label_refresh)
             }
         }

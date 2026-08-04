@@ -8,7 +8,7 @@ import com.eric.wandroid.domain.model.PopularRoute
 import com.eric.wandroid.domain.model.Website
 
 data class HomeUiState(
-    val isInitialLoading: Boolean = false,
+    val isInitialLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val blockingErrorMessage: String? = null,

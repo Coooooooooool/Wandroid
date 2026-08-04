@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -34,7 +33,7 @@ class HomeFeedFragment : Fragment() {
 
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var recyclerView: RecyclerView? = null
-    private var fullScreenProgress: ProgressBar? = null
+    private var homeSkeleton: View? = null
     private var emptyState: View? = null
     private var emptyTitle: TextView? = null
     private var emptyMessage: TextView? = null
@@ -85,10 +84,14 @@ class HomeFeedFragment : Fragment() {
         super.onPause()
     }
 
+    fun refreshFromTabReselection() {
+        viewModel.refresh()
+    }
+
     private fun bindViews(view: View) {
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         recyclerView = view.findViewById(R.id.homeRecyclerView)
-        fullScreenProgress = view.findViewById(R.id.fullScreenProgress)
+        homeSkeleton = view.findViewById(R.id.homeSkeleton)
         emptyState = view.findViewById(R.id.emptyState)
         emptyTitle = view.findViewById(R.id.emptyStateTitle)
         emptyMessage = view.findViewById(R.id.emptyStateMessage)
@@ -124,7 +127,8 @@ class HomeFeedFragment : Fragment() {
         val showEmptyState = !state.hasContent && !state.isInitialLoading && state.blockingErrorMessage == null
 
         recyclerView?.visibility = if (state.hasContent) View.VISIBLE else View.GONE
-        fullScreenProgress?.visibility = if (state.isInitialLoading && !state.hasContent) View.VISIBLE else View.GONE
+        val showInitialLoading = state.isInitialLoading && !state.hasContent
+        homeSkeleton?.visibility = if (showInitialLoading) View.VISIBLE else View.GONE
         emptyState?.visibility = if (showBlockingState || showEmptyState) View.VISIBLE else View.GONE
         recyclerView?.let { list ->
             scrollToTopButton?.let { button ->
@@ -147,7 +151,7 @@ class HomeFeedFragment : Fragment() {
         recyclerView?.adapter = null
         swipeRefreshLayout = null
         recyclerView = null
-        fullScreenProgress = null
+        homeSkeleton = null
         emptyState = null
         emptyTitle = null
         emptyMessage = null

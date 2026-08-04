@@ -93,7 +93,11 @@ class TodoActivity : AppCompatActivity() {
                 launch { viewModel.uiState.collect(::render) }
                 launch {
                     viewModel.messages.collect { message ->
-                        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+                        val text = when (message) {
+                            is TodoMessage.Text -> message.value
+                            is TodoMessage.Resource -> getString(message.id)
+                        }
+                        Snackbar.make(findViewById(android.R.id.content), text, Snackbar.LENGTH_LONG).show()
                     }
                 }
                 launch {

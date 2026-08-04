@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_background"
+        android:elevation="0dp"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back_24"
+        app:navigationIconTint="@color/text_primary"
+        app:title="@string/wallpaper_screen_title"
+        app:titleTextColor="@color/text_primary" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/wallpaperGroupTabs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:tabIndicatorColor="@color/brand_secondary"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="scrollable"
+        app:tabRippleColor="@color/surface_tint"
+        app:tabSelectedTextColor="@color/brand_secondary"
+        app:tabTextColor="@color/text_secondary" />
+
+    <HorizontalScrollView
+        android:id="@+id/wallpaperCategoryScroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperGroupTabs">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/wallpaperCategoryChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            app:chipSpacingHorizontal="8dp"
+            app:singleLine="true"
+            app:singleSelection="true" />
+    </HorizontalScrollView>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/wallpaperRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperCategoryScroll">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wallpaperRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="24dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/wallpaperProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperCategoryScroll" />
+
+    <LinearLayout
+        android:id="@+id/wallpaperEmptyState"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wallpaperCategoryScroll">
+
+        <TextView
+            android:id="@+id/wallpaperEmptyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/wallpaperEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="@color/text_secondary" />
+
+        <Button
+            android:id="@+id/wallpaperRetryButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/label_retry" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -75,7 +75,8 @@ class NewsListAdapter(
                 if (article.date.isNotBlank()) add(article.date)
                 if (article.url.isNotBlank()) add(article.url)
             }
-            summaryView.text = summarySource.joinToString("\n").ifBlank { "点击查看新闻详情" }
+            summaryView.text = summarySource.joinToString("\n")
+                .ifBlank { itemView.context.getString(R.string.news_open_detail_hint) }
             metaView.text = article.date.ifBlank { itemView.context.getString(R.string.unknown_time) }
             val previewUrl = article.previewImageUrl
             coverView.isVisible = previewUrl.isNotBlank()

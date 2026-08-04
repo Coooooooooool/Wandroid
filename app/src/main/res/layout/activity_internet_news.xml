@@ -18,6 +18,7 @@
         app:navigationIcon="@drawable/ic_arrow_back_24"
         app:navigationIconTint="@color/text_primary"
         app:subtitleTextColor="@color/text_secondary"
+        app:title="@string/internet_news_screen_title"
         app:titleTextColor="@color/text_primary" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

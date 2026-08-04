@@ -2,6 +2,7 @@ package com.eric.wandroid.data.remote
 
 import android.content.Context
 import com.eric.wandroid.data.remote.api.MoyuApiService
+import com.eric.wandroid.data.remote.api.MoeHuApiService
 import com.eric.wandroid.data.remote.api.InternetNewsApiService
 import com.eric.wandroid.data.remote.api.NewsApiService
 import com.eric.wandroid.data.remote.api.WanAndroidApiService
@@ -17,6 +18,7 @@ object NetworkModule {
     private const val BASE_URL = "https://www.wanandroid.com/"
     private const val MOYU_BASE_URL = "https://api.kuleu.com/"
     private const val NEWS_BASE_URL = "https://v.juhe.cn/"
+    private const val MOEHU_BASE_URL = "https://img.moehu.org/"
 
     private var appContext: Context? = null
     private var sessionStore: SessionStore? = null
@@ -84,5 +86,14 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(InternetNewsApiService::class.java)
+    }
+
+    val moeHuApiService: MoeHuApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(MOEHU_BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MoeHuApiService::class.java)
     }
 }

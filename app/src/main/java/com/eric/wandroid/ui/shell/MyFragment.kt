@@ -31,6 +31,7 @@ import com.eric.wandroid.ui.profile.CollectProfileActivity
 import com.eric.wandroid.ui.settings.SettingsActivity
 import com.eric.wandroid.ui.todo.TodoActivity
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -96,7 +97,7 @@ class MyFragment : Fragment() {
         settingsButton?.setOnClickListener {
             startActivity(SettingsActivity.createIntent(requireContext()))
         }
-        logoutButton?.setOnClickListener { logout() }
+        logoutButton?.setOnClickListener { showLogoutConfirmation() }
         observeSession()
     }
 
@@ -217,6 +218,16 @@ class MyFragment : Fragment() {
         }
     }
 
+    private fun showLogoutConfirmation() {
+        if (currentSession == null || isLoggingOut) return
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.auth_logout)
+            .setMessage(R.string.auth_logout_confirmation_message)
+            .setNegativeButton(R.string.auth_logout_cancel, null)
+            .setPositiveButton(R.string.auth_logout) { _, _ -> logout() }
+            .show()
+    }
+
     private fun logout() {
         if (currentSession == null || isLoggingOut) return
         isLoggingOut = true
@@ -225,7 +236,7 @@ class MyFragment : Fragment() {
             when (val result = authRepository.logout()) {
                 is AppResult.Success -> {
                     view?.let { root ->
-                        Snackbar.make(root, "Signed out.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(root, R.string.auth_logout_success, Snackbar.LENGTH_SHORT).show()
                     }
                 }
                 is AppResult.Error -> {

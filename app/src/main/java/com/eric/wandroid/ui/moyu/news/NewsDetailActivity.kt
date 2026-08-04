@@ -60,6 +60,7 @@ class NewsDetailActivity : AppCompatActivity() {
         bindViews()
         EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, swipeRefreshLayout)
         setSupportActionBar(toolbar)
+        setTitle(R.string.news_detail_title)
         toolbar.setNavigationOnClickListener { finish() }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -108,7 +109,8 @@ class NewsDetailActivity : AppCompatActivity() {
 
     private fun render(state: NewsDetailUiState) {
         val article = state.detail?.article ?: state.article
-        toolbar.title = "新闻详情"
+        setTitle(R.string.news_detail_title)
+        toolbar.setTitle(R.string.news_detail_title)
         toolbar.subtitle = article.category.ifBlank { null }
         swipeRefreshLayout.isRefreshing = state.isRefreshing
 
@@ -135,7 +137,8 @@ class NewsDetailActivity : AppCompatActivity() {
         emptyState.visibility = if (showEmpty) View.VISIBLE else View.GONE
         if (showEmpty) {
             emptyTitle.setText(R.string.error_title)
-            emptyMessage.text = state.blockingErrorMessage ?: "新闻详情暂时无法加载。"
+            emptyMessage.text = state.blockingErrorMessage
+                ?: getString(R.string.news_detail_empty_message)
             emptyAction.setText(R.string.label_retry)
         }
     }

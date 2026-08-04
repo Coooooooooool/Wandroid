@@ -24,14 +24,15 @@ class NewsListActivity : AppCompatActivity() {
         bindViews()
         EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, categoryTabs, viewPager)
         setSupportActionBar(toolbar)
+        setTitle(R.string.news_list_title)
         toolbar.setNavigationOnClickListener { finish() }
-        toolbar.title = "摸鱼新闻"
+        toolbar.setTitle(R.string.news_list_title)
         toolbar.subtitle = null
 
         viewPager.adapter = NewsCategoryPagerAdapter(this, categories)
         viewPager.offscreenPageLimit = 1
         TabLayoutMediator(categoryTabs, viewPager) { tab, position ->
-            tab.text = categories[position].label
+            tab.setText(categories[position].labelRes)
         }.attach()
     }
 

@@ -12,8 +12,10 @@ import com.eric.wandroid.R
 import com.eric.wandroid.common.storage.CacheUtils
 import com.eric.wandroid.common.ui.EdgeToEdgeHelper
 import com.eric.wandroid.common.ui.RemoteImageLoader
+import com.eric.wandroid.data.settings.AppLanguage
 import com.eric.wandroid.data.settings.AppSettingsStore
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +25,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var toolbar: MaterialToolbar
     private lateinit var nightModeValueView: TextView
     private lateinit var toggleNightModeButton: Button
+    private lateinit var languageValueView: TextView
+    private lateinit var changeLanguageButton: Button
     private lateinit var clearCacheButton: Button
     private lateinit var cacheValueView: TextView
     private lateinit var versionValueView: TextView
@@ -36,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         settingsStore = AppSettingsStore(this)
         bindViews()
-        EdgeToEdgeHelper.apply(this, toolbar, findViewById(R.id.settingsScrollView))
+        EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, findViewById(R.id.settingsScrollView))
         setSupportActionBar(toolbar)
         toolbar.setNavigationOnClickListener { finish() }
 
@@ -49,6 +53,8 @@ class SettingsActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         nightModeValueView = findViewById(R.id.nightModeValue)
         toggleNightModeButton = findViewById(R.id.toggleNightModeButton)
+        languageValueView = findViewById(R.id.languageValue)
+        changeLanguageButton = findViewById(R.id.changeLanguageButton)
         clearCacheButton = findViewById(R.id.clearCacheButton)
         cacheValueView = findViewById(R.id.cacheValue)
         versionValueView = findViewById(R.id.versionValue)
@@ -58,6 +64,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun renderStaticContent() {
         renderNightModeState()
+        renderLanguageState()
         versionValueView.text = buildVersionLabel()
         authorNameValueView.text = AUTHOR_NAME
         authorEmailValueView.text = AUTHOR_EMAIL
@@ -70,6 +77,8 @@ class SettingsActivity : AppCompatActivity() {
             renderNightModeState()
             settingsStore.applyNightMode()
         }
+
+        changeLanguageButton.setOnClickListener { showLanguageDialog() }
 
         clearCacheButton.setOnClickListener {
             clearCacheButton.isEnabled = false
@@ -101,6 +110,37 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.settings_switch_to_night)
         }
+    }
+
+    private fun renderLanguageState() {
+        languageValueView.text = getString(
+            when (settingsStore.appLanguage()) {
+                AppLanguage.FOLLOW_SYSTEM -> R.string.settings_language_follow_system
+                AppLanguage.CHINESE -> R.string.settings_language_chinese
+                AppLanguage.ENGLISH -> R.string.settings_language_english
+            }
+        )
+    }
+
+    private fun showLanguageDialog() {
+        val languages = AppLanguage.entries
+        val labels = languages.map { language ->
+            getString(
+                when (language) {
+                    AppLanguage.FOLLOW_SYSTEM -> R.string.settings_language_follow_system
+                    AppLanguage.CHINESE -> R.string.settings_language_chinese
+                    AppLanguage.ENGLISH -> R.string.settings_language_english
+                }
+            )
+        }.toTypedArray()
+        val selectedIndex = languages.indexOf(settingsStore.appLanguage())
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_language_dialog_title)
+            .setSingleChoiceItems(labels, selectedIndex) { dialog, which ->
+                dialog.dismiss()
+                settingsStore.setAppLanguage(languages[which])
+            }
+            .show()
     }
 
     private fun refreshCacheSize() {

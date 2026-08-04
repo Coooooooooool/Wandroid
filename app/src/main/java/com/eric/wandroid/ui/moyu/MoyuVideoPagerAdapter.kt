@@ -1,7 +1,9 @@
 package com.eric.wandroid.ui.moyu
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.graphics.SurfaceTexture
+import android.media.MediaPlayer
+import android.view.Surface
+import android.view.TextureView
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.eric.wandroid.R
 
@@ -43,46 +44,93 @@ class MoyuVideoPagerAdapter : RecyclerView.Adapter<MoyuVideoPagerAdapter.VideoVi
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val videoContainer: FrameLayout = itemView.findViewById(R.id.pageVideoContainer)
-        private val videoView: VideoView = itemView.findViewById(R.id.pageVideoView)
+        private val videoView: TextureView = itemView.findViewById(R.id.pageVideoView)
         private val loadingView: ProgressBar = itemView.findViewById(R.id.pageVideoLoading)
         private val hintView: TextView = itemView.findViewById(R.id.pageVideoHint)
         private var currentUrl: String = ""
         private var videoWidth: Int = 0
         private var videoHeight: Int = 0
+        private var shouldPlay = false
+        private var mediaPlayer: MediaPlayer? = null
+        private var videoSurface: Surface? = null
+
+        init {
+            videoView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                    if (currentUrl.isNotBlank()) {
+                        preparePlayer(currentUrl)
+                    }
+                }
+
+                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+                    updateVideoBounds()
+                }
+
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    releasePlayer()
+                    return true
+                }
+
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
+            }
+        }
 
         fun bind(videoUrl: String, shouldPlay: Boolean) {
+            this.shouldPlay = shouldPlay
             hintView.setText(R.string.moyu_video_swipe_hint)
             if (currentUrl != videoUrl) {
                 currentUrl = videoUrl
                 videoWidth = 0
                 videoHeight = 0
                 loadingView.visibility = View.VISIBLE
-                videoView.background = ColorDrawable(Color.TRANSPARENT)
-                videoView.setVideoPath(videoUrl)
-                videoView.setOnPreparedListener { mediaPlayer ->
-                    loadingView.visibility = View.GONE
-                    mediaPlayer.isLooping = true
-                    videoWidth = mediaPlayer.videoWidth
-                    videoHeight = mediaPlayer.videoHeight
-                    updateVideoBounds()
-                    if (shouldPlay) {
-                        mediaPlayer.start()
-                    }
-                }
+                releasePlayer()
+                if (videoView.isAvailable) preparePlayer(videoUrl)
             }
             updateVideoBounds()
-            if (shouldPlay) {
-                videoView.start()
-            } else {
-                videoView.pause()
+            mediaPlayer?.let { player ->
+                if (shouldPlay && player.isPlaying.not()) player.start()
+                if (!shouldPlay && player.isPlaying) player.pause()
             }
         }
 
         fun release() {
-            videoView.stopPlayback()
+            releasePlayer()
             currentUrl = ""
             videoWidth = 0
             videoHeight = 0
+        }
+
+        private fun preparePlayer(url: String) {
+            releasePlayer()
+            val surfaceTexture = videoView.surfaceTexture ?: return
+            val surface = Surface(surfaceTexture)
+            videoSurface = surface
+            mediaPlayer = MediaPlayer().apply {
+                setSurface(surface)
+                setOnPreparedListener { player ->
+                    if (currentUrl != url) return@setOnPreparedListener
+                    loadingView.visibility = View.GONE
+                    player.isLooping = true
+                    this@VideoViewHolder.videoWidth = player.videoWidth
+                    this@VideoViewHolder.videoHeight = player.videoHeight
+                    updateVideoBounds()
+                    if (this@VideoViewHolder.shouldPlay) player.start()
+                }
+                setOnErrorListener { _, _, _ ->
+                    if (currentUrl == url) loadingView.visibility = View.GONE
+                    true
+                }
+                setDataSource(url)
+                prepareAsync()
+            }
+        }
+
+        private fun releasePlayer() {
+            mediaPlayer?.runCatching { stop() }
+            mediaPlayer?.release()
+            mediaPlayer = null
+            videoSurface?.release()
+            videoSurface = null
         }
 
         private fun updateVideoBounds() {

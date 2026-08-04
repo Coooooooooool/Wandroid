@@ -1,10 +1,12 @@
 package com.eric.wandroid.ui.todo
 
+import androidx.annotation.StringRes
 import com.eric.wandroid.common.auth.LOGIN_EXPIRED_CODE
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.eric.wandroid.common.result.AppResult
+import com.eric.wandroid.R
 import com.eric.wandroid.data.remote.NetworkModule
 import com.eric.wandroid.data.repository.AccountRepository
 import com.eric.wandroid.domain.model.TodoItem
@@ -17,14 +19,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+sealed interface TodoMessage {
+    data class Text(val value: String) : TodoMessage
+
+    data class Resource(@StringRes val id: Int) : TodoMessage
+}
+
 class TodoViewModel(
     private val repository: AccountRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TodoUiState())
     val uiState: StateFlow<TodoUiState> = _uiState.asStateFlow()
 
-    private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 1)
-    val messages: SharedFlow<String> = _messages.asSharedFlow()
+    private val _messages = MutableSharedFlow<TodoMessage>(extraBufferCapacity = 1)
+    val messages: SharedFlow<TodoMessage> = _messages.asSharedFlow()
 
     private val _authRequired = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val authRequired: SharedFlow<String> = _authRequired.asSharedFlow()
@@ -79,7 +87,7 @@ class TodoViewModel(
                 is AppResult.Error -> {
                     _uiState.update { it.copy(isLoadingMore = false) }
                     emitAuthRequiredIfNeeded(result)
-                    _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                 }
             }
         }
@@ -100,14 +108,14 @@ class TodoViewModel(
             ) {
                 is AppResult.Success -> {
                     _uiState.update { it.copy(isSubmittingEditor = false) }
-                    _messages.tryEmit("待办已创建。")
+                    _messages.tryEmit(TodoMessage.Resource(R.string.todo_created))
                     requestTodos(isRefresh = false)
                 }
 
                 is AppResult.Error -> {
                     _uiState.update { it.copy(isSubmittingEditor = false) }
                     emitAuthRequiredIfNeeded(result)
-                    _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                 }
             }
         }
@@ -129,14 +137,14 @@ class TodoViewModel(
             ) {
                 is AppResult.Success -> {
                     _uiState.update { it.copy(isSubmittingEditor = false) }
-                    _messages.tryEmit("待办已更新。")
+                    _messages.tryEmit(TodoMessage.Resource(R.string.todo_updated))
                     requestTodos(isRefresh = false)
                 }
 
                 is AppResult.Error -> {
                     _uiState.update { it.copy(isSubmittingEditor = false) }
                     emitAuthRequiredIfNeeded(result)
-                    _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                 }
             }
         }
@@ -150,7 +158,13 @@ class TodoViewModel(
                 is AppResult.Success -> {
                     _uiState.update { it.copy(actingTodoIds = it.actingTodoIds - todo.id) }
                     _messages.tryEmit(
-                        if (todo.isCompleted) "待办已恢复为未完成。" else "待办已标记为完成。"
+                        TodoMessage.Resource(
+                            if (todo.isCompleted) {
+                                R.string.todo_restored
+                            } else {
+                                R.string.todo_completed
+                            }
+                        )
                     )
                     requestTodos(isRefresh = false)
                 }
@@ -158,7 +172,7 @@ class TodoViewModel(
                 is AppResult.Error -> {
                     _uiState.update { it.copy(actingTodoIds = it.actingTodoIds - todo.id) }
                     emitAuthRequiredIfNeeded(result)
-                    _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                 }
             }
         }
@@ -171,14 +185,14 @@ class TodoViewModel(
             when (val result = repository.deleteTodo(todo.id)) {
                 is AppResult.Success -> {
                     _uiState.update { it.copy(actingTodoIds = it.actingTodoIds - todo.id) }
-                    _messages.tryEmit("待办已删除。")
+                    _messages.tryEmit(TodoMessage.Resource(R.string.todo_deleted))
                     requestTodos(isRefresh = false)
                 }
 
                 is AppResult.Error -> {
                     _uiState.update { it.copy(actingTodoIds = it.actingTodoIds - todo.id) }
                     emitAuthRequiredIfNeeded(result)
-                    _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                 }
             }
         }
@@ -222,7 +236,7 @@ class TodoViewModel(
                         )
                     }
                     if (!shouldShowBlocking) {
-                        _messages.tryEmit(result.message)
+                    _messages.tryEmit(TodoMessage.Text(result.message))
                     }
                     emitAuthRequiredIfNeeded(result)
                 }

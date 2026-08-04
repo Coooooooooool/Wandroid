@@ -7,7 +7,10 @@ import com.eric.wandroid.data.settings.AppSettingsStore
 class WandroidApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        AppSettingsStore(this).applyNightMode()
+        AppSettingsStore(this).apply {
+            applyNightMode()
+            applyAppLanguage()
+        }
         NetworkModule.initialize(this)
     }
 }

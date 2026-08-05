@@ -4,6 +4,14 @@
 
 每项记录应包括：问题、改动、涉及文件、验证方式及遗留风险。新功能、跨模块重构或需要明确依赖管理的工作，仍按正常任务流程进入 `TASK_QUEUE.md`。
 
+## 2026-08-05 底部导航选中态区分
+
+- 问题：底部导航栏将图标和文字统一设置为 `text_primary`，选中与未选中项没有视觉差异，新用户难以判断当前页面。
+- 改动：新增 `bottom_navigation_item_tint` 状态颜色选择器，选中项使用强调色，未选中项使用低饱和中性色；四个标签改用描边/实心成对图标，形成干净的 Material 风格选中态，不再使用图标背景。为日/夜间主题分别配置对比度足够的导航色。
+- 涉及文件：`app/src/main/res/color/bottom_navigation_item_tint.xml`、`app/src/main/res/drawable/ic_nav_*.xml`、`app/src/main/res/menu/menu_bottom_navigation.xml`、`app/src/main/res/values/colors.xml`、`app/src/main/res/values-night/colors.xml`、`app/src/main/res/layout/activity_home.xml`。
+- 验证：已核对 `BottomNavigationView` 的 `checked` 状态会命中颜色选择器和成对图标，且日/夜间主题均定义了所引用的颜色资源；首次构建发现 Material Components 1.10.0 不支持选中背景属性，已移除不兼容配置；移除图标背景后，`./gradlew.bat :app:assembleDebug --no-daemon --console=plain` 构建通过。
+- 遗留：需在真机或模拟器中确认四个标签的最终视觉间距符合预期。
+
 ## 2026-07-30 标题栏视觉一致性
 
 - 问题：登录页和设置页标题栏使用绿色背景，与中性内容页样式不一致。

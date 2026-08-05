@@ -8,6 +8,9 @@
     <color name="surface_card">#FFFFFFFF</color>
     <color name="text_primary">#1F2933</color>
     <color name="text_secondary">#52606D</color>
+    <color name="bottom_navigation_selected">#0F4C5C</color>
+    <color name="bottom_navigation_unselected">#687684</color>
+    <color name="bottom_navigation_selected_background">#DCEEF0</color>
     <color name="divider">#D9E2EC</color>
     <color name="skeleton_base">#E3E9ED</color>
     <color name="code_inline_text">#0F4C5C</color>

@@ -4,6 +4,11 @@
 
 > 当前版本是功能持续完善中的客户端项目，外部接口的可用性与返回内容由相应服务提供方决定。
 
+## 应用下载
+
+[下载 Wandroid v1.0 APK](downloads/Wandroid-v1.0.apk)
+
+当前安装包使用 Android 调试证书签名，适合体验与测试。Android 安装时可能需要允许浏览器或文件管理器安装未知来源应用。
 
 
 ## 应用截图
@@ -176,4 +181,3 @@ design/             # 页面和组件设计素材
 - 小型修复和 UI 调整记入缺陷日志，保留问题、改动、验证方式和风险说明。
 
 详细规则可见：[项目说明](agent/docs/PROJECT_SPEC.md)、[模块边界](agent/docs/MODULES.md)、[接口规范](agent/docs/API_SPEC.md)、[开发流程](agent/docs/WORKFLOW.md) 和 [Agent 规则](agent/docs/AI_RULES.md)。
-

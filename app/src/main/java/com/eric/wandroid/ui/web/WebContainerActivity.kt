@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -33,6 +35,7 @@ class WebContainerActivity : AppCompatActivity() {
 
     private var pageTitle: String = ""
     private var pageUrl: String = ""
+    private var isShareableArticle: Boolean = false
     private var hasRecordedHistory: Boolean = false
     private val historyRepository by lazy(LazyThreadSafetyMode.NONE) {
         HistoryRepository.getInstance(applicationContext)
@@ -43,6 +46,7 @@ class WebContainerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_web_container)
         pageTitle = intent.getStringExtra(EXTRA_TITLE).orEmpty()
         pageUrl = intent.getStringExtra(EXTRA_URL).orEmpty()
+        isShareableArticle = intent.getBooleanExtra(EXTRA_SHAREABLE_ARTICLE, false)
 
         bindViews()
         EdgeToEdgeHelper.applySurfaceToolbar(this, toolbar, webView, emptyState)
@@ -73,6 +77,23 @@ class WebContainerActivity : AppCompatActivity() {
         emptyTitle = findViewById(R.id.emptyStateTitle)
         emptyMessage = findViewById(R.id.emptyStateMessage)
         retryButton = findViewById(R.id.emptyStateAction)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (isShareableArticle && pageUrl.isNotBlank()) {
+            menuInflater.inflate(R.menu.menu_web_article, menu)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share_article -> {
+                shareArticle()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun configureWebView() {
@@ -159,6 +180,15 @@ class WebContainerActivity : AppCompatActivity() {
         }
     }
 
+    private fun shareArticle() {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TITLE, pageTitle)
+            putExtra(Intent.EXTRA_TEXT, "$pageTitle\n$pageUrl")
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.article_share_chooser_title)))
+    }
+
     override fun onDestroy() {
         webView.stopLoading()
         webView.destroy()
@@ -168,11 +198,17 @@ class WebContainerActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_TITLE = "extra_title"
         private const val EXTRA_URL = "extra_url"
+        private const val EXTRA_SHAREABLE_ARTICLE = "extra_shareable_article"
 
         fun createIntent(context: Context, title: String, url: String): Intent {
             return Intent(context, WebContainerActivity::class.java)
                 .putExtra(EXTRA_TITLE, title)
                 .putExtra(EXTRA_URL, url)
+        }
+
+        fun createArticleIntent(context: Context, title: String, url: String): Intent {
+            return createIntent(context, title, url)
+                .putExtra(EXTRA_SHAREABLE_ARTICLE, true)
         }
     }
 }

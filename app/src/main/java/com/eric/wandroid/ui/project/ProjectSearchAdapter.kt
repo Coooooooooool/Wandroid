@@ -159,7 +159,7 @@ class ProjectSearchAdapter(
             collectButton.setOnClickListener { onCollectClick(article) }
             itemView.setOnClickListener {
                 itemView.context.startActivity(
-                    WebContainerActivity.createIntent(itemView.context, renderedTitle.toString(), article.link)
+                    WebContainerActivity.createArticleIntent(itemView.context, renderedTitle.toString(), article.link)
                 )
             }
         }

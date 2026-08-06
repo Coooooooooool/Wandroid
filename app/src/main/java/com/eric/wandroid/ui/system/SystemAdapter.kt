@@ -177,7 +177,7 @@ class SystemAdapter(
                 chip.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_primary))
                 chip.setOnClickListener {
                     itemView.context.startActivity(
-                        WebContainerActivity.createIntent(itemView.context, article.title, article.link)
+                        WebContainerActivity.createArticleIntent(itemView.context, article.title, article.link)
                     )
                 }
                 chipGroup.addView(chip)
@@ -233,7 +233,7 @@ class SystemAdapter(
             collectButton.setOnClickListener { onCollectClick(article) }
             itemView.setOnClickListener {
                 itemView.context.startActivity(
-                    WebContainerActivity.createIntent(itemView.context, renderedTitle.toString(), article.link)
+                    WebContainerActivity.createArticleIntent(itemView.context, renderedTitle.toString(), article.link)
                 )
             }
         }

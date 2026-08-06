@@ -42,7 +42,7 @@ class WendaDetailActivity : AppCompatActivity() {
     private val adapter = WendaDetailAdapter(
         onOpenOriginalClick = { article ->
             if (article.link.isNotBlank()) {
-                startActivity(WebContainerActivity.createIntent(this, toolbar.title.toString(), article.link))
+                startActivity(WebContainerActivity.createArticleIntent(this, toolbar.title.toString(), article.link))
             }
         },
         onCollectClick = { viewModel.toggleCollect() },

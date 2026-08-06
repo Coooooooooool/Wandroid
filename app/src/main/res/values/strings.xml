@@ -75,6 +75,8 @@
     <string name="profile_rank_value">排名：%1$s</string>
     <string name="profile_stats_value">积分 %1$d · 等级 %2$d</string>
     <string name="web_screen_title">网页详情</string>
+    <string name="article_share_action">分享</string>
+    <string name="article_share_chooser_title">分享文章</string>
     <string name="web_invalid_url">链接无效，无法打开。</string>
     <string name="extra_entry_title">扩展内容</string>
     <string name="extra_empty_message">暂无可展示的扩展内容，尝试切换模块或下拉刷新。</string>

@@ -117,7 +117,7 @@ class HomePopularCardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val intent = if (article.id > 0) {
                     WendaDetailActivity.createIntent(itemView.context, article)
                 } else {
-                    WebContainerActivity.createIntent(itemView.context, renderTitle(article.title), article.link)
+                    WebContainerActivity.createArticleIntent(itemView.context, renderTitle(article.title), article.link)
                 }
                 itemView.context.startActivity(intent)
             }

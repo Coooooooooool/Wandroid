@@ -232,7 +232,7 @@ class ExtraContentAdapter(
                 val intent = if (mode == ExtraContentMode.Wenda && article.id > 0) {
                     WendaDetailActivity.createIntent(itemView.context, article)
                 } else {
-                    WebContainerActivity.createIntent(itemView.context, renderedTitle.toString(), article.link)
+                    WebContainerActivity.createArticleIntent(itemView.context, renderedTitle.toString(), article.link)
                 }
                 itemView.context.startActivity(intent)
             }

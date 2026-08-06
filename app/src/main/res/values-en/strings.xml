@@ -243,6 +243,8 @@
     <string name="section_banners">Banners</string>
     <string name="system_loading_articles">Loading articles...</string>
     <string name="web_screen_title">Web page</string>
+    <string name="article_share_action">Share</string>
+    <string name="article_share_chooser_title">Share article</string>
     <string name="web_invalid_url">This link is invalid and cannot be opened.</string>
     <string name="extra_entry_title">More content</string>
     <string name="extra_empty_message">No content is available. Change section or pull down to refresh.</string>

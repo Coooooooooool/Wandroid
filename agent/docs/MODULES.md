@@ -182,3 +182,9 @@ UI 只消费可渲染状态，不直接处理原始异常类型。
 - 新增接口：更新 `API_SPEC.md`
 - 变更模块边界：更新本文件
 - 变更 Agent 执行原则：更新 `AI_RULES.md`
+### 摸鱼直播模块
+
+- `data/repository/LiveRepository` 负责下载和解析 M3U 播放列表。
+- `domain/model/LiveChannel` 只承载频道名称、分组和播放地址。
+- `ui/moyu/live` 负责频道列表、播放状态和直播源切换。
+- 直播模块不依赖 WanAndroid API，不在 UI 直接发起网络请求。

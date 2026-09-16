@@ -3,9 +3,11 @@ package com.eric.wandroid.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.eric.wandroid.R
 import com.eric.wandroid.common.ui.EdgeToEdgeHelper
 import com.eric.wandroid.ui.shell.DiscoverFragment
@@ -22,7 +24,9 @@ class HomeActivity : AppCompatActivity() {
     private var currentTab: MainTab? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        configureSplashExitAnimation(splashScreen)
         setContentView(R.layout.activity_home)
         bindViews()
         EdgeToEdgeHelper.applyContentOnly(this, mainContentContainer, bottomNavigationView)
@@ -105,6 +109,29 @@ class HomeActivity : AppCompatActivity() {
         currentTab = tab
     }
 
+    private fun configureSplashExitAnimation(
+        splashScreen: androidx.core.splashscreen.SplashScreen
+    ) {
+        splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
+            val distance = 20f * resources.displayMetrics.density
+            splashScreenViewProvider.iconView.animate()
+                .alpha(0f)
+                .scaleX(0.82f)
+                .scaleY(0.82f)
+                .translationY(-distance)
+                .setDuration(SPLASH_EXIT_DURATION_MS)
+                .setInterpolator(DecelerateInterpolator())
+                .start()
+
+            splashScreenViewProvider.view.animate()
+                .alpha(0f)
+                .setDuration(SPLASH_EXIT_DURATION_MS)
+                .setInterpolator(DecelerateInterpolator())
+                .withEndAction(splashScreenViewProvider::remove)
+                .start()
+        }
+    }
+
     private fun fragmentFor(tab: MainTab): Fragment {
         return tabFragments.getOrPut(tab) {
             supportFragmentManager.findFragmentByTag(fragmentTag(tab))
@@ -135,6 +162,7 @@ class HomeActivity : AppCompatActivity() {
     companion object {
         private const val FRAGMENT_TAG_PREFIX = "main_tab_"
         private const val EXTRA_INITIAL_TAB = "initial_tab"
+        private const val SPLASH_EXIT_DURATION_MS = 280L
 
         fun createIntent(context: Context, initialTab: MainTab = MainTab.Home): Intent {
             return Intent(context, HomeActivity::class.java)

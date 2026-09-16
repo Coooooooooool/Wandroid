@@ -19,7 +19,8 @@
         android:theme="@style/Theme.Wandroid">
         <activity
             android:name=".ui.home.HomeActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Wandroid.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,6 +80,10 @@
         <activity
             android:name=".ui.moyu.MoyuVideoActivity"
             android:label="@string/moyu_video_title"
+            android:exported="false" />
+        <activity
+            android:name=".ui.moyu.live.LiveActivity"
+            android:label="@string/live_title"
             android:exported="false" />
         <activity
             android:name=".ui.moyu.news.NewsListActivity"

@@ -195,3 +195,15 @@ data class PageDto<T>(
 - 问答和公众号分页从 `1` 开始，广场和最新项目从 `0` 开始，页码差异由 Repository 层统一处理。
 - 公众号模块本阶段实现“分类 + 文章列表”闭环，历史搜索留待后续任务。
 - 扩展内容模块复用现有文章模型、收藏动作和 Web 容器跳转。
+## Phase L - 摸鱼直播
+
+直播源不是 WanAndroid API，当前通过用户提供或内置的 M3U URL 获取。
+
+| 能力 | 方法 | 地址 | 鉴权 | 返回 |
+| --- | --- | --- | --- | --- |
+| 默认直播源 | GET | `https://iptv-org.github.io/iptv/countries/cn.m3u` | 否 | M3U 文本 |
+| 自定义直播源 | GET | 用户输入的 HTTP(S) M3U 地址 | 由源决定 | M3U 文本 |
+
+- Repository 负责网络错误、HTTP 错误、空列表和常见 M3U 解析。
+- 当前最多展示 100 个频道。
+- 播放由 Android `VideoView` 负责，第三方直播地址可用性不由应用保证。
